@@ -1,0 +1,12 @@
+{
+  "name": "windoe",
+  "version": "1.0.0",
+  "description": "Add a filtered container over a background image",
+  "main": "index.js",
+  "repository": {
+    "url": "https://github.com/mCornish/windoe",
+    "type": "git"
+  },
+  "author": "Mike Cornish",
+  "license": "MIT"
+}
