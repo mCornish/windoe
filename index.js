@@ -11,8 +11,10 @@ function Windoe (backSelector, containerSelector) {
 
     this.backEl = document.querySelector(backSelector)
     this.containerEl = document.querySelector(containerSelector)
-    
+
     this.imageUrl = getImageUrl(this.backEl)
+
+    this.containerEl.style = `background-image: url(${this.imageUrl})`
 }
 
 Windoe.prototype.getImageUrl = function () {
