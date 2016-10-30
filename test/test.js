@@ -1,7 +1,6 @@
 import test from 'tape'
 import Windoe from '../index'
 import createElement from './helpers/createElement'
-console.log(createElement)
 
 const IMAGE_URL = 'http://www.mikecornish.net/social.jpg'
 const BACK_IMAGE_STRING = `background-image: url(${IMAGE_URL})`
@@ -9,15 +8,14 @@ const BACK_IMAGE_STRING = `background-image: url(${IMAGE_URL})`
 test('Take a background selector and a container selector as arguments', assert => {
     const backEl = createElement('div', 'data-back', {'style': BACK_IMAGE_STRING})
     const contEl = createElement('div', 'data-cont')
+    const w = new Windoe('[data-back]', '[data-cont]')
 
     assert.test('Takes a background selector as it\'s first argument', t => {
-        const w = new Windoe('[data-back]', '[data-cont]')
         t.equal(w.backEl instanceof HTMLElement, true, 'windoe.backEl should be a DOM element')
         t.end()
     })
 
     assert.test('Takes a container selector as it\'s second argument', t => {
-        const w = new Windoe('[data-back]', '[data-cont]')
         t.equal(w.containerEl instanceof HTMLElement, true, 'window.containerEl should be a DOM element')
         t.end()
     })
@@ -29,47 +27,40 @@ test('Take a background selector and a container selector as arguments', assert 
 })
 
 test('Retrieves background image URL', assert => {
+    const contEl = createElement('div', 'data-cont')
+
     assert.test('Retrieves URL from css background', t => {
-        body.appendChild(backEl)
-        body.appendChild(contEl)
+        const backEl = createElement('div', 'data-back', {'style': BACK_IMAGE_STRING})
+        const w = new Windoe('[data-back]', '[data-cont]')
 
-        const w = new Windoe(backSelector, contSelector)
-
-        t.equal(w.getImageUrl(), imageUrl, 'w.imageUrl should be equal to the background image URL')
+        t.equal(w.getImageUrl(), IMAGE_URL, 'w.imageUrl should be equal to the background image URL')
         t.end()
 
         backEl.remove()
-        contEl.remove()
     })
 
     assert.test('Retrieves URL from image src', t => {
-        const backElImg = document.createElement('img')
-        backElImg.setAttribute(backSelectorName, '')
-        backElImg.src = imageUrl
+        const backEl = createElement('img', 'data-cont', {'src': IMAGE_URL})
+        const w = new Windoe('[data-back]', '[data-cont]')
 
-        body.appendChild(backElImg)
-        body.appendChild(contEl)
-
-        const w = new Windoe(backSelector, contSelector)
-
-        t.equal(w.getImageUrl(), imageUrl, 'w.imageUrl should be equal to the image src')
+        t.equal(w.getImageUrl(), IMAGE_URL, 'w.imageUrl should be equal to the image src')
         t.end()
 
-        backElImg.remove()
-        contEl.remove()
+        backEl.remove()
     })
 
     assert.end()
+
+    contEl.remove()
 })
 
 test('Sets background image on container', assert => {
-    body.appendChild(backEl)
-    body.appendChild(contEl)
+    const backEl = createElement('div', 'data-back', {'style': BACK_IMAGE_STRING})
+    const contEl = createElement('div', 'data-cont')
+    const w = new Windoe('[data-back]', '[data-cont]')
 
-    const w = new Windoe(backSelector, contSelector)
-
-    const contImageUrl = contEl.style.backgroundImage.slice(5, -2)
-    assert.equal(contImageUrl, imageUrl, 'The container\'s background image should be the same as the input background image')
+    const contImageUrl = w.containerEl.style.backgroundImage.slice(5, -2)
+    assert.equal(contImageUrl, IMAGE_URL, 'The container\'s background image should be the same as the input background image')
     assert.end()
     
     backEl.remove()
@@ -77,11 +68,11 @@ test('Sets background image on container', assert => {
 })
 
 test('Adds class to background element', assert => {
-    body.appendChild(backEl)
-    body.appendChild(contEl)
+    const backEl = createElement('div', 'data-back', {'style': BACK_IMAGE_STRING})
+    const contEl = createElement('div', 'data-cont')
+    const w = new Windoe('[data-back]', '[data-cont]')
 
-    const w = new Windoe(backSelector, contSelector)
-    const backClass = backEl.getAttribute('class')
+    const backClass = w.backEl.getAttribute('class')
 
     assert.equal(backClass, 'windoe-back', 'The background element\'s is given the windoe-back class')
     assert.end()
@@ -91,16 +82,33 @@ test('Adds class to background element', assert => {
 })
 
 test('Adds class to container element', assert => {
-    body.appendChild(backEl)
-    body.appendChild(contEl)
+    const backEl = createElement('div', 'data-back', {'style': BACK_IMAGE_STRING})
 
-    const w = new Windoe(backSelector, contSelector)
-    const contClass = contEl.getAttribute('class')
+    assert.test('Adds class when container has no class already', t => {
+        const contEl = createElement('div', 'data-cont-foo')
+        const w = new Windoe('[data-back]', '[data-cont-foo]')
 
-    assert.equal(contClass, 'windoe-container', 'The background element\'s is given the windoe-back class')
+        const contClass = w.containerEl.getAttribute('class')
+
+        t.equal(contClass, 'windoe-container', 'The container element is given the windoe-container class')
+        t.end()
+
+        contEl.remove()
+    })
+    
+    assert.test('Adds class when container already has a class', t => {
+        const contEl = createElement('div', 'data-cont-bar', {'class': 'foo'})
+        const w = new Windoe('[data-back]', '[data-cont-bar]')
+
+        const contClass = w.containerEl.getAttribute('class')
+
+        t.equal(contClass, 'foo windoe-container', 'The windoe-container class is added to the container\'s existing class')
+        t.end()
+
+        contEl.remove()
+    })
+
     assert.end()
 
     backEl.remove()
-    contEl.remove()
-
 })
