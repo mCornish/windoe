@@ -7380,6 +7380,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     });
 });
 
-(0, _tape2.default)('Sets background image on container', function (assert) {});
+(0, _tape2.default)('Sets background image on container', function (assert) {
+    var body = document.getElementsByTagName('body')[0];
+    var backSelectorName = 'data-back';
+    var contSelectorName = 'data-cont';
+    var backSelector = '[' + backSelectorName + ']';
+    var contSelector = '[' + contSelectorName + ']';
+    var backEl = document.createElement('div');
+    var contEl = document.createElement('div');
+    backEl.setAttribute(backSelectorName, '');
+    contEl.setAttribute(contSelectorName, '');
+    var imageUrl = 'http://www.mikecornish.net/social.jpg';
+    backEl.style = 'background-image: url(' + imageUrl + ')';
+
+    var w = new _index2.default(backSelector, contSelector);
+
+    var contImageUrl = contEl.style.backgroundImage;
+    assert.equal(contImageUrl, imageUrl, 'The container\'s background image should be the same as the input background image');
+    assert.end();
+});
 
 },{"../index":1,"./helpers/createElement":60,"tape":54}]},{},[61]);

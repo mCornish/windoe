@@ -60,5 +60,21 @@ test('Retrieves background image URL', assert => {
 })
 
 test('Sets background image on container', assert => {
+    const body = document.getElementsByTagName('body')[0]
+    const backSelectorName = 'data-back'
+    const contSelectorName = 'data-cont'
+    const backSelector = `[${backSelectorName}]`
+    const contSelector = `[${contSelectorName}]`
+    const backEl = document.createElement('div')
+    const contEl = document.createElement('div')
+    backEl.setAttribute(backSelectorName, '')
+    contEl.setAttribute(contSelectorName, '')
+    const imageUrl = 'http://www.mikecornish.net/social.jpg'
+    backEl.style = `background-image: url(${imageUrl})`
 
+    const w = new Windoe(backSelector, contSelector)
+
+    const contImageUrl = contEl.style.backgroundImage
+    assert.equal(contImageUrl, imageUrl, 'The container\'s background image should be the same as the input background image')
+    assert.end()
 })
