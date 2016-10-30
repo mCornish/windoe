@@ -50,7 +50,7 @@ test('Retrieves background image URL', assert => {
     assert.test('Retrieves URL from image src', t => {
         const el = document.createElement('img')
         el.setAttribute(selectorName, '')
-        el.src = 'imageUrl'
+        el.src = imageUrl
         body.appendChild(el)
         const w = new Windoe(selector, '.container')
 

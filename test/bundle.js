@@ -7371,7 +7371,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     assert.test('Retrieves URL from image src', function (t) {
         var el = document.createElement('img');
         el.setAttribute(selectorName, '');
-        el.src = 'imageUrl';
+        el.src = imageUrl;
         body.appendChild(el);
         var w = new _index2.default(selector, '.container');
 
