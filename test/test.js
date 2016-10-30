@@ -68,16 +68,30 @@ test('Sets background image on container', assert => {
 })
 
 test('Adds class to background element', assert => {
-    const backEl = createElement('div', 'data-back', {'style': BACK_IMAGE_STRING})
     const contEl = createElement('div', 'data-cont')
-    const w = new Windoe('[data-back]', '[data-cont]')
 
-    const backClass = w.backEl.getAttribute('class')
+    assert.test('Adds class when background has no class already', t => {
+        const backEl = createElement('div', 'data-back', {'style': BACK_IMAGE_STRING})
+        const w = new Windoe('[data-back]', '[data-cont]')
 
-    assert.equal(backClass, 'windoe-back', 'The background element\'s is given the windoe-back class')
+        const backClass = w.backEl.getAttribute('class')
+
+        t.equal(backClass, 'windoe-back', 'Adds windoe-back class when background has no class already')
+        t.end()
+        backEl.remove()
+    })
+    assert.test('Adds class when background already has a class', t => {
+        const backEl = createElement('div', 'data-back-foo', {'style': BACK_IMAGE_STRING, 'class': 'foo'})
+        const w = new Windoe('[data-back-foo]', '[data-cont]')
+
+        const backClass = w.backEl.getAttribute('class')
+
+        t.equal(backClass, 'foo windoe-back', 'Adds windoe-back class when background already has a class')
+        t.end()
+        backEl.remove()
+    })
+
     assert.end()
-
-    backEl.remove()
     contEl.remove()
 })
 
@@ -87,28 +101,23 @@ test('Adds class to container element', assert => {
     assert.test('Adds class when container has no class already', t => {
         const contEl = createElement('div', 'data-cont-foo')
         const w = new Windoe('[data-back]', '[data-cont-foo]')
-
         const contClass = w.containerEl.getAttribute('class')
 
         t.equal(contClass, 'windoe-container', 'The container element is given the windoe-container class')
         t.end()
-
         contEl.remove()
     })
     
     assert.test('Adds class when container already has a class', t => {
         const contEl = createElement('div', 'data-cont-bar', {'class': 'foo'})
         const w = new Windoe('[data-back]', '[data-cont-bar]')
-
         const contClass = w.containerEl.getAttribute('class')
 
         t.equal(contClass, 'foo windoe-container', 'The windoe-container class is added to the container\'s existing class')
         t.end()
-
         contEl.remove()
     })
 
     assert.end()
-
     backEl.remove()
 })
