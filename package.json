@@ -3,10 +3,24 @@
   "version": "1.0.0",
   "description": "Add a filtered container over a background image",
   "main": "index.js",
+  "scripts": {
+    "test": "browserify -t babelify test/test.js -o test/index.js && test/index.html | browser-run -input html -p 2222 | faucet"
+  },
   "repository": {
     "url": "https://github.com/mCornish/windoe",
     "type": "git"
   },
   "author": "Mike Cornish",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "browser-run": "^3.3.0",
+    "browserify": "^13.1.1",
+    "faucet": "^0.0.1",
+    "tape": "^4.6.2",
+    "window-watcher": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.18.0",
+    "babelify": "^7.3.0"
+  }
 }
