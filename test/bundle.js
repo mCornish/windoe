@@ -17,6 +17,13 @@ function Windoe(backSelector, containerSelector) {
 
     this.imageUrl = getImageUrl(this.backEl);
 
+    // Add Windoe classes to elements
+    var backClass = newClassString(this.backEl, 'windoe-back');
+    var contClass = newClassString(this.containerEl, 'windoe-container');
+    this.backEl.setAttribute('class', backClass);
+    this.containerEl.setAttribute('class', contClass);
+
+    // Set container background image
     this.containerEl.style = 'background-image: url(' + this.imageUrl + ')';
 }
 
@@ -45,6 +52,11 @@ function getStyleUrl($el) {
     var startIndex = backImage.indexOf("url(");
     var endIndex = backImage.indexOf(")");
     return backImage.substring(startIndex + 5, endIndex - 1);
+}
+
+function newClassString($el, className) {
+    var classString = $el.getAttribute('class');
+    return classString ? classString + ' ' + className : className;
 }
 
 },{}],2:[function(require,module,exports){
@@ -7300,11 +7312,24 @@ function config (name) {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],60:[function(require,module,exports){
-"use strict";
+'use strict';
 
-module.exports.default = function (tag, selector) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+exports.default = function (tag, selector, attributes) {
+    var body = document.getElementsByTagName('body')[0];
     var el = document.createElement(tag);
-    el.setAttribute(tag, true);
+
+    el.setAttribute(selector, '');
+
+    for (var attr in attributes) {
+        el.setAttribute(attr, attributes[attr]);
+    }
+
+    body.appendChild(el);
+
     return el;
 };
 
@@ -7325,30 +7350,23 @@ var _createElement2 = _interopRequireDefault(_createElement);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var body = document.getElementsByTagName('body')[0];
-var backSelectorName = 'data-back';
-var contSelectorName = 'data-cont';
-var backSelector = '[' + backSelectorName + ']';
-var contSelector = '[' + contSelectorName + ']';
-var backEl = document.createElement('div');
-var contEl = document.createElement('div');
-backEl.setAttribute(backSelectorName, '');
-contEl.setAttribute(contSelectorName, '');
-var imageUrl = 'http://www.mikecornish.net/social.jpg';
-backEl.style = 'background-image: url(' + imageUrl + ')';
+console.log(_createElement2.default);
+
+var IMAGE_URL = 'http://www.mikecornish.net/social.jpg';
+var BACK_IMAGE_STRING = 'background-image: url(' + IMAGE_URL + ')';
 
 (0, _tape2.default)('Take a background selector and a container selector as arguments', function (assert) {
-    body.appendChild(backEl);
-    body.appendChild(contEl);
+    var backEl = (0, _createElement2.default)('div', 'data-back', { 'style': BACK_IMAGE_STRING });
+    var contEl = (0, _createElement2.default)('div', 'data-cont');
 
     assert.test('Takes a background selector as it\'s first argument', function (t) {
-        var w = new _index2.default(backSelector, contSelector);
+        var w = new _index2.default('[data-back]', '[data-cont]');
         t.equal(w.backEl instanceof HTMLElement, true, 'windoe.backEl should be a DOM element');
         t.end();
     });
 
     assert.test('Takes a container selector as it\'s second argument', function (t) {
-        var w = new _index2.default(backSelector, contSelector);
+        var w = new _index2.default('[data-back]', '[data-cont]');
         t.equal(w.containerEl instanceof HTMLElement, true, 'window.containerEl should be a DOM element');
         t.end();
     });

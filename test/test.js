@@ -1,31 +1,23 @@
 import test from 'tape'
 import Windoe from '../index'
 import createElement from './helpers/createElement'
+console.log(createElement)
 
-const body = document.getElementsByTagName('body')[0]
-const backSelectorName = 'data-back'
-const contSelectorName = 'data-cont'
-const backSelector = `[${backSelectorName}]`
-const contSelector = `[${contSelectorName}]`
-const backEl = document.createElement('div')
-const contEl = document.createElement('div')
-backEl.setAttribute(backSelectorName, '')
-contEl.setAttribute(contSelectorName, '')
-const imageUrl = 'http://www.mikecornish.net/social.jpg'
-backEl.style = `background-image: url(${imageUrl})`
+const IMAGE_URL = 'http://www.mikecornish.net/social.jpg'
+const BACK_IMAGE_STRING = `background-image: url(${IMAGE_URL})`
 
 test('Take a background selector and a container selector as arguments', assert => {
-    body.appendChild(backEl)
-    body.appendChild(contEl)
+    const backEl = createElement('div', 'data-back', {'style': BACK_IMAGE_STRING})
+    const contEl = createElement('div', 'data-cont')
 
     assert.test('Takes a background selector as it\'s first argument', t => {
-        const w = new Windoe(backSelector, contSelector)
+        const w = new Windoe('[data-back]', '[data-cont]')
         t.equal(w.backEl instanceof HTMLElement, true, 'windoe.backEl should be a DOM element')
         t.end()
     })
 
     assert.test('Takes a container selector as it\'s second argument', t => {
-        const w = new Windoe(backSelector, contSelector)
+        const w = new Windoe('[data-back]', '[data-cont]')
         t.equal(w.containerEl instanceof HTMLElement, true, 'window.containerEl should be a DOM element')
         t.end()
     })

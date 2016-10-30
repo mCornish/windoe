@@ -14,7 +14,15 @@ function Windoe (backSelector, containerSelector) {
 
     this.imageUrl = getImageUrl(this.backEl)
 
+    // Add Windoe classes to elements
+    const backClass = newClassString(this.backEl, 'windoe-back')
+    const contClass = newClassString(this.containerEl, 'windoe-container')
+    this.backEl.setAttribute('class', backClass)
+    this.containerEl.setAttribute('class', contClass)
+
+    // Set container background image
     this.containerEl.style = `background-image: url(${this.imageUrl})`
+
 }
 
 Windoe.prototype.getImageUrl = function () {
@@ -43,4 +51,9 @@ function getStyleUrl ($el) {
     const startIndex = backImage.indexOf("url(")
     const endIndex = backImage.indexOf(")")
     return backImage.substring(startIndex + 5, endIndex - 1)
+}
+
+function newClassString ($el, className) {
+    const classString = $el.getAttribute('class')
+    return classString ? `${classString} ${className}` : className
 }
