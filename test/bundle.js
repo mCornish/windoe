@@ -7262,6 +7262,15 @@ function config (name) {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],60:[function(require,module,exports){
+"use strict";
+
+module.exports.default = function (tag, selector) {
+    var el = document.createElement(tag);
+    el.setAttribute(tag, true);
+    return el;
+};
+
+},{}],61:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -7270,9 +7279,13 @@ var _tape = require('tape');
 
 var _tape2 = _interopRequireDefault(_tape);
 
-var _index = require('../index.js');
+var _index = require('../index');
 
 var _index2 = _interopRequireDefault(_index);
+
+var _createElement = require('./helpers/createElement');
+
+var _createElement2 = _interopRequireDefault(_createElement);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7283,10 +7296,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 });
 
 (0, _tape2.default)('Takes a background selector as it\'s first argument', function (assert) {
-    var el = document.createElement('div');
     var selectorName = 'data-background';
     var selector = '[' + selectorName + ']';
-    el.setAttribute(selectorName, true);
+    //const el = createElement('div', selectorName)
     var w = new _index2.default(selector);
 
     assert.equal(w.backEl instanceof HTMLElement, true, 'windoe.backEl should be a DOM element');
@@ -7308,4 +7320,4 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 (0, _tape2.default)('Sets background image on container', function (assert) {});
 
-},{"../index.js":1,"tape":54}]},{},[60]);
+},{"../index":1,"./helpers/createElement":60,"tape":54}]},{},[61]);
