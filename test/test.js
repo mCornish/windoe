@@ -2,45 +2,60 @@ import test from 'tape'
 import Windoe from '../index'
 import createElement from './helpers/createElement'
 
-test('Is an object', assert => {
-    const w = new Windoe()
-    assert.equal(typeof w, 'object',
-        'windoe should be a object')
-    assert.end()
-})
-
-test('Takes a background selector as it\'s first argument', assert => {
+test('Take a background selector and a container selector as arguments', assert => {
+    const body = document.getElementsByTagName('body')[0]
     const el = document.createElement('div')
-    const selectorName = 'data-background'
-    const selector = `[${selectorName}]`
-    const w = new Windoe(selector)
+    const backSelectorName = 'data-back'
+    const contSelectorName = 'data-cont'
+    const backSelector = `[${backSelectorName}]`
+    const contSelector = `[${contSelectorName}]`
 
-    assert.equal(w.backEl instanceof HTMLElement, true, 'windoe.backEl should be a DOM element')
-    assert.end()
-})
+    assert.test('Takes a background selector as it\'s first argument', t => {
+        el.setAttribute(backSelectorName, '')
+        el.style = `background-image: url('http://www.mikecornish.net/social.jpg')`
+        body.appendChild(el)
+        const w = new Windoe(backSelector, '.container')
+        t.equal(w.backEl instanceof HTMLElement, true, 'windoe.backEl should be a DOM element')
+        t.end()
+    })
 
-test('Takes a container selector as it\'s second argument', assert => {
-    const el = document.createElement('div')
-    const selectorName = 'data-container'
-    const selector = `[${selectorName}]`
-    el.setAttribute(selectorName, true)
-    const w = new Windoe(null, selector)
+    assert.test('Takes a container selector as it\'s second argument', t => {
+        el.setAttribute(contSelectorName, '')
+        body.appendChild(el)
+        const w = new Windoe(backSelector, contSelector)
+        t.equal(w.containerEl instanceof HTMLElement, true, 'window.containerEl should be a DOM element')
+        t.end()
+    })
 
-    assert.equal(w.containerEl instanceof HTMLElement, true, 'window.containerEl should be a DOM element')
     assert.end()
 })
 
 test('Retrieves background image URL', assert => {
+    const body = document.getElementsByTagName('body')[0]
+    const selectorName = 'data-back'
+    const selector = `[${selectorName}]`
+    const imageUrl = 'http://www.mikecornish.net/social.jpg'
+
     assert.test('Retrieves URL from css background', t => {
         const el = document.createElement('div')
-        const selectorName = 'data-back'
-        const selector = '[$(selectorName)]'
-        el.setAttribute(selectorName, true)
-        const imageUrl = 'test.jpg'
+        el.setAttribute(selectorName, '')
         el.style = `background-image: url(${imageUrl})`
-        const w = new Windoe(selector)
+        body.appendChild(el)
+        const w = new Windoe(selector, '.container')
 
-        t.equal(w.getImageUrl(), imageURL, 'w.imageUrl should be equal to the background image URL')
+        t.equal(w.getImageUrl(), imageUrl, 'w.imageUrl should be equal to the background image URL')
+        t.end()
+    })
+
+    assert.test('Retrieves URL from image src', t => {
+        const el = document.createElement('img')
+        el.setAttribute(selectorName, '')
+        el.src = 'imageUrl'
+        body.appendChild(el)
+        const w = new Windoe(selector, '.container')
+
+        t.equal(w.getImageUrl(), imageUrl, 'w.imageUrl should be equal to the image src')
+        t.end()
     })
 })
 

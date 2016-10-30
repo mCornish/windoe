@@ -1,12 +1,48 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
+'use strict';
 
-module.exports = Window;
+module.exports = Windoe;
 module.exports.default = module.exports;
 
-function Window(backSelector, containerSelector) {
+function Windoe(backSelector, containerSelector) {
+    if (typeof backSelector != 'string') {
+        throw 'Windoe requires a selector as argument 1. Currently ' + backSelector + '.';
+    }
+    if (typeof containerSelector != 'string') {
+        throw 'Windoe requires a selector as argument 2. Currently ' + containerSelector + '.';
+    }
+
     this.backEl = document.querySelector(backSelector);
     this.containerEl = document.querySelector(containerSelector);
+
+    this.imageUrl = getImageUrl(this.backEl);
+}
+
+Windoe.prototype.getImageUrl = function () {
+    return this.imageUrl;
+};
+
+function getImageUrl($el) {
+    var cssUrl = getStyleUrl($el);
+    var imageSrc = $el.src;
+
+    if (cssUrl) {
+        // Set URL from css background-image
+        return cssUrl;
+    } else if (imageSrc) {
+        // Set URL from image src
+        return imageSrc;
+    } else {
+        // Has no image URL
+        throw 'No image URl found on background element \'' + $el + '\'';
+    }
+}
+
+function getStyleUrl($el) {
+    var backImage = $el.style.backgroundImage;
+    var startIndex = backImage.indexOf("url(");
+    var endIndex = backImage.indexOf(")");
+    return backImage.substring(startIndex + 5, endIndex - 1);
 }
 
 },{}],2:[function(require,module,exports){
@@ -7273,8 +7309,6 @@ module.exports.default = function (tag, selector) {
 },{}],61:[function(require,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _tape = require('tape');
 
 var _tape2 = _interopRequireDefault(_tape);
@@ -7289,34 +7323,62 @@ var _createElement2 = _interopRequireDefault(_createElement);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-(0, _tape2.default)('Is an object', function (assert) {
-    var w = new _index2.default();
-    assert.equal(typeof w === 'undefined' ? 'undefined' : _typeof(w), 'object', 'windoe should be a object');
-    assert.end();
-});
-
-(0, _tape2.default)('Takes a background selector as it\'s first argument', function (assert) {
-    var selectorName = 'data-background';
-    var selector = '[' + selectorName + ']';
-    //const el = createElement('div', selectorName)
-    var w = new _index2.default(selector);
-
-    assert.equal(w.backEl instanceof HTMLElement, true, 'windoe.backEl should be a DOM element');
-    assert.end();
-});
-
-(0, _tape2.default)('Takes a container selector as it\'s second argument', function (assert) {
+(0, _tape2.default)('Take a background selector and a container selector as arguments', function (assert) {
+    var body = document.getElementsByTagName('body')[0];
     var el = document.createElement('div');
-    var selectorName = 'data-container';
-    var selector = '[' + selectorName + ']';
-    el.setAttribute(selectorName, true);
-    var w = new _index2.default(null, selector);
+    var backSelectorName = 'data-back';
+    var contSelectorName = 'data-cont';
+    var backSelector = '[' + backSelectorName + ']';
+    var contSelector = '[' + contSelectorName + ']';
 
-    assert.equal(w.containerEl instanceof HTMLElement, true, 'window.containerEl should be a DOM element');
+    assert.test('Takes a background selector as it\'s first argument', function (t) {
+        el.setAttribute(backSelectorName, '');
+        el.style = 'background-image: url(\'http://www.mikecornish.net/social.jpg\')';
+        body.appendChild(el);
+        var w = new _index2.default(backSelector, '.container');
+        t.equal(w.backEl instanceof HTMLElement, true, 'windoe.backEl should be a DOM element');
+        t.end();
+    });
+
+    assert.test('Takes a container selector as it\'s second argument', function (t) {
+        el.setAttribute(contSelectorName, '');
+        body.appendChild(el);
+        var w = new _index2.default(backSelector, contSelector);
+        t.equal(w.containerEl instanceof HTMLElement, true, 'window.containerEl should be a DOM element');
+        t.end();
+    });
+
     assert.end();
 });
 
-(0, _tape2.default)('Retrieves background image', function (assert) {});
+(0, _tape2.default)('Retrieves background image URL', function (assert) {
+    var body = document.getElementsByTagName('body')[0];
+    var selectorName = 'data-back';
+    var selector = '[' + selectorName + ']';
+    var imageUrl = 'http://www.mikecornish.net/social.jpg';
+
+    assert.test('Retrieves URL from css background', function (t) {
+        var el = document.createElement('div');
+        el.setAttribute(selectorName, '');
+        el.style = 'background-image: url(' + imageUrl + ')';
+        body.appendChild(el);
+        var w = new _index2.default(selector, '.container');
+
+        t.equal(w.getImageUrl(), imageUrl, 'w.imageUrl should be equal to the background image URL');
+        t.end();
+    });
+
+    assert.test('Retrieves URL from image src', function (t) {
+        var el = document.createElement('img');
+        el.setAttribute(selectorName, '');
+        el.src = 'imageUrl';
+        body.appendChild(el);
+        var w = new _index2.default(selector, '.container');
+
+        t.equal(w.getImageUrl(), imageUrl, 'w.imageUrl should be equal to the image src');
+        t.end();
+    });
+});
 
 (0, _tape2.default)('Sets background image on container', function (assert) {});
 
